@@ -28,7 +28,7 @@ public class SplashActivity extends Activity {
                 startMainActivity();
                 Log.e(TAG,"Current process name ==" + Thread.currentThread().getName());
             }
-        }, 10000);
+        }, 2000);
     }
 
     @Override
