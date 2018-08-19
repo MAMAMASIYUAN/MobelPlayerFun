@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <!--Item-->
+    <include layout="@layout/titlebar"/>
 
     <!--FrameLayout-->
     <FrameLayout
