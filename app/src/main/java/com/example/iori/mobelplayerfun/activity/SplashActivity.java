@@ -51,6 +51,7 @@ public class SplashActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        //移除所有的消息和回调
         handler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
