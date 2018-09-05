@@ -38,7 +38,7 @@ public class SystemVideoPlayer extends Activity{
         }
 
         //设置播放控制面板
-        videoView.setMediaController(new MediaController(this));
+//        videoView.setMediaController(new MediaController(this));
 
 
     }
