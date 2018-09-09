@@ -143,16 +143,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         utils = new Utils();
         findViews();
+        setListener();
 
-
-        //准备好播放的监听
-        videoView.setOnPreparedListener(new MyOnPreparedListener());
-
-        //准备好出错了的监听
-        videoView.setOnErrorListener(new MyOnErrorListener());
-
-        //准备好完成了的监听
-        videoView.setOnCompletionListener(new MyOnCompletionListener());
 
         //得到播放地址
         uri = getIntent().getData();
@@ -164,6 +156,40 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 //        videoView.setMediaController(new MediaController(this));
 
 
+    }
+
+    private void setListener() {
+        //准备好播放的监听
+        videoView.setOnPreparedListener(new MyOnPreparedListener());
+
+        //准备好出错了的监听
+        videoView.setOnErrorListener(new MyOnErrorListener());
+
+        //准备好完成了的监听
+        videoView.setOnCompletionListener(new MyOnCompletionListener());
+
+        //设置SeekBar拖动的监听
+        seekbarVideo.setOnSeekBarChangeListener(new VideoOnSeekBarChangeListener());
+    }
+
+    class VideoOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if(fromUser){
+                videoView.seekTo(progress);
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
     }
 
     @Override
