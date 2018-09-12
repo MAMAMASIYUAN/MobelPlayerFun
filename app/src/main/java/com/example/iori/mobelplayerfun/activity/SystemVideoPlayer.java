@@ -12,6 +12,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -67,6 +69,11 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      * 是否网络uri
      */
     private boolean isNetUri;
+
+    /**
+     * 定义收拾识别器
+     */
+    private GestureDetector detector;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -128,24 +135,29 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             // Handle clicks for btnVideoPre
             playPreVideo();
         } else if ( v == btnVideoStartPause ) {
-            // Handle clicks for btnVideoStartPause
-            if(videoView.isPlaying()){
-                //Video is playing, set to pause
-                videoView.pause();
-                //Set button to play
-                btnVideoStartPause.setBackgroundResource(R.drawable.btn_video_start_selector);
-            }else{
-                //Video is pause, set to play
-                videoView.start();
-                //Set button to pause
-                btnVideoStartPause.setBackgroundResource(R.drawable.btn_video_pause_selector);
+            startAndPause();
 
-            }
         } else if ( v == btnVideoNext ) {
             // Handle clicks for btnVideoNext
             playNextVideo();
         } else if ( v == btnVideoSwitchScreen ) {
             // Handle clicks for btnVideoSwitchScreen
+        }
+    }
+
+    private void startAndPause() {
+        // Handle clicks for btnVideoStartPause
+        if(videoView.isPlaying()){
+            //Video is playing, set to pause
+            videoView.pause();
+            //Set button to play
+            btnVideoStartPause.setBackgroundResource(R.drawable.btn_video_start_selector);
+        }else{
+            //Video is pause, set to play
+            videoView.start();
+            //Set button to pause
+            btnVideoStartPause.setBackgroundResource(R.drawable.btn_video_pause_selector);
+
         }
     }
 
@@ -328,6 +340,12 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         super.onDestroy();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
     private void initData() {
         utils = new Utils();
         //Register 广播
@@ -335,6 +353,28 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
         registerReceiver(receiver,intentFilter);
+
+        detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public void onLongPress(MotionEvent e) {
+                super.onLongPress(e);
+//                Toast.makeText(SystemVideoPlayer.this, "Long press", Toast.LENGTH_SHORT).show();
+                startAndPause();
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                Toast.makeText(SystemVideoPlayer.this, "Double click", Toast.LENGTH_SHORT).show();
+
+                return super.onDoubleTap(e);
+            }
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                Toast.makeText(SystemVideoPlayer.this, "Single click", Toast.LENGTH_SHORT).show();
+                return super.onSingleTapConfirmed(e);
+            }
+        });
     }
 
     private void setListener() {
