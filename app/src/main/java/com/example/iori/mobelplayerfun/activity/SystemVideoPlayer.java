@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      * Update video progress
      */
     private static final int PROGRESS = 1;
+    private static final int HIDE_MEDIACONTROLLER = 2;
     private VideoView videoView;
     private Uri uri;
     private LinearLayout llTop;
@@ -54,6 +57,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private Button btnVideoStartPause;
     private Button btnVideoNext;
     private Button btnVideoSwitchScreen;
+    private RelativeLayout media_controller;
 
     private Utils utils;
     private MyReceiver receiver;
@@ -74,6 +78,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      * 定义收拾识别器
      */
     private GestureDetector detector;
+    private boolean isShowMediaController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -105,6 +110,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         btnVideoStartPause = (Button)findViewById( R.id.btn_video_start_pause );
         btnVideoNext = (Button)findViewById( R.id.btn_video_next );
         btnVideoSwitchScreen = (Button)findViewById( R.id.btn_video_switch_screen );
+        media_controller = (RelativeLayout) findViewById(R.id.media_controller);
 
 
         btnVoice.setOnClickListener( this );
@@ -143,6 +149,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         } else if ( v == btnVideoSwitchScreen ) {
             // Handle clicks for btnVideoSwitchScreen
         }
+        handler.removeMessages(HIDE_MEDIACONTROLLER);
+        handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 5000);
     }
 
     private void startAndPause() {
@@ -268,6 +276,9 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
+                case HIDE_MEDIACONTROLLER:
+                    hideMediaController();
+                    break;
                 case PROGRESS:
                     //1.Get current progress
                     int currentPosition = videoView.getCurrentPosition();
@@ -371,7 +382,16 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                Toast.makeText(SystemVideoPlayer.this, "Single click", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SystemVideoPlayer.this, "Single click", Toast.LENGTH_SHORT).show();
+                if(isShowMediaController){
+                    //Hide the controller
+                    hideMediaController();
+                    handler.sendEmptyMessage(HIDE_MEDIACONTROLLER);
+                }else{
+                    //Show the controller
+                    showMediaController();
+                    handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 5000);
+                }
                 return super.onSingleTapConfirmed(e);
             }
         });
@@ -433,11 +453,13 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
 
+            handler.removeMessages(HIDE_MEDIACONTROLLER);
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
 
+            handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 5000);
         }
     }
 
@@ -455,6 +477,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             int duration = videoView.getDuration();
             seekbarVideo.setMax(duration);
             tvDuration.setText(utils.stringForTime(duration));
+            hideMediaController();
             //Send message
             handler.sendEmptyMessage(PROGRESS);
 
@@ -477,5 +500,22 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 //            Toast.makeText(SystemVideoPlayer.this,"播放完成=" + uri, Toast.LENGTH_SHORT).show();
             playNextVideo();
         }
+    }
+
+
+    /**
+     * Show Media Controller
+     */
+    private void showMediaController(){
+        media_controller.setVisibility(View.VISIBLE);
+        isShowMediaController = true;
+    }
+
+    /**
+     * Hide Media Controller
+     */
+    private void hideMediaController(){
+        media_controller.setVisibility(View.GONE);
+        isShowMediaController = false;
     }
 }
