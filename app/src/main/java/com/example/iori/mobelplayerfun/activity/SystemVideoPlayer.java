@@ -12,22 +12,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.example.iori.mobelplayerfun.R;
 import com.example.iori.mobelplayerfun.domain.MediaItem;
 import com.example.iori.mobelplayerfun.utils.Utils;
+import com.example.iori.mobelplayerfun.view.VideoView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +39,19 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      */
     private static final int PROGRESS = 1;
     private static final int HIDE_MEDIACONTROLLER = 2;
+    /**
+     * Full screen
+     */
+    private static final int FULL_SCREEN = 1;
+    /**
+     * Default screen
+     */
+    private static final int DEFAULT_SCREEN = 2;
+    private int screenWidth = 0;//Width of the screen
+    private int screenHeight = 0;//Height of the screen
+    private boolean isFullScreen = false;
+    private int videoWidth = 0;//Width of the video
+    private int videoHeight = 0;//Height of the video
     private VideoView videoView;
     private Uri uri;
     private LinearLayout llTop;
@@ -79,6 +92,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      */
     private GestureDetector detector;
     private boolean isShowMediaController;
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -148,6 +163,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             playNextVideo();
         } else if ( v == btnVideoSwitchScreen ) {
             // Handle clicks for btnVideoSwitchScreen
+            setFullAndDefaultScreen();
         }
         handler.removeMessages(HIDE_MEDIACONTROLLER);
         handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 5000);
@@ -375,7 +391,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                Toast.makeText(SystemVideoPlayer.this, "Double click", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SystemVideoPlayer.this, "Double click", Toast.LENGTH_SHORT).show();
+                setFullAndDefaultScreen();
 
                 return super.onDoubleTap(e);
             }
@@ -395,6 +412,23 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
                 return super.onSingleTapConfirmed(e);
             }
         });
+
+        //Get the width and height of the screen
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
+
+    }
+
+    private void setFullAndDefaultScreen() {
+        if(isFullScreen){
+            //Default
+            setVideoType(DEFAULT_SCREEN);
+        }else {
+            //Full
+            setVideoType(FULL_SCREEN);
+        }
     }
 
     private void setListener() {
@@ -472,6 +506,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
         @Override
         public void onPrepared(MediaPlayer mediaPlayer) {
+            videoWidth = mediaPlayer.getVideoWidth();
+            videoHeight = mediaPlayer.getVideoHeight();
             videoView.start();//Start playing
             //Get duration
             int duration = videoView.getDuration();
@@ -481,6 +517,42 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             //Send message
             handler.sendEmptyMessage(PROGRESS);
 
+//            videoView.setVideoSise(200, 200);
+
+            setVideoType(DEFAULT_SCREEN);
+        }
+    }
+
+    private void setVideoType(int defaultScreen) {
+        switch (defaultScreen){
+            case FULL_SCREEN:
+                //1. Set video size - same as the screen
+                videoView.setVideoSise(screenWidth, screenHeight);
+
+                //2. Set state of the button - default
+                btnVideoSwitchScreen.setBackgroundResource(R.drawable.btn_video_switch_screen_default_selector);
+                isFullScreen = true;
+                break;
+            case DEFAULT_SCREEN:
+                //1. Set video size - default size
+                int mVideoWidth = videoWidth;
+                int mVideoHeight = videoHeight;
+                int width = screenWidth;//Width of the screen
+                int height = screenHeight;//Height of the screen
+                // for compatibility, we adjust size based on aspect ratio
+                if (mVideoWidth * height < width * mVideoHeight) {
+                    //Log.i("@@@", "image too wide, correcting");
+                    width = height * mVideoWidth / mVideoHeight;
+                } else if (mVideoWidth * height > width * mVideoHeight) {
+                    //Log.i("@@@", "image too tall, correcting");
+                    height = width * mVideoHeight / mVideoWidth;
+                }
+                videoView.setVideoSise(width, height);
+
+                //2. Set state of the button - full
+                btnVideoSwitchScreen.setBackgroundResource(R.drawable.btn_video_switch_screen_full_selector);
+                isFullScreen = false;
+                break;
         }
     }
 
