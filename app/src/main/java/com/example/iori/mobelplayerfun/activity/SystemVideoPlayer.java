@@ -15,6 +15,7 @@ import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -692,5 +693,31 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private void hideMediaController(){
         media_controller.setVisibility(View.GONE);
         isShowMediaController = false;
+    }
+
+    /**
+     *
+     * 监听物理键，实现音量控制
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+            currentVoice --;
+            updateVoice(currentVoice, false);
+            handler.removeMessages(HIDE_MEDIACONTROLLER);
+            handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 50000);
+            return true;
+        }else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            currentVoice ++;
+            updateVoice(currentVoice, false);
+            handler.removeMessages(HIDE_MEDIACONTROLLER);
+            handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 50000);
+            return true;
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
