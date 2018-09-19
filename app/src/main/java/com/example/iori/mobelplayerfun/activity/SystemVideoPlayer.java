@@ -393,9 +393,36 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         super.onDestroy();
     }
 
+    private float startY;
+    private float endY;
+    private float touchRang;// Height of the screen
+    private int mVol;//Voice when pressing
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         detector.onTouchEvent(event);
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                startY = event.getY();
+                mVol = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                touchRang = Math.max(screenHeight, screenWidth);
+                handler.removeMessages(HIDE_MEDIACONTROLLER);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                endY = event.getY();
+                float distanceY = startY - endY;
+                float delta = (distanceY / touchRang) * maxVoice;
+
+                int voice = (int) Math.min(Math.max(mVol + delta,0),maxVoice);
+                if(delta != 0){
+                    isMute = false;
+                    updateVoice(voice, isMute);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 50000);
+                break;
+        }
         return super.onTouchEvent(event);
     }
 
