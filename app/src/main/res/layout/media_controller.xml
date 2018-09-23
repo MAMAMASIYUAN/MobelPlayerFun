@@ -166,5 +166,7 @@
 
     </LinearLayout>
 
+    <include layout="@layout/ll_buffer" android:id="@+id/ll_buffer"/>
+
 
 </RelativeLayout>

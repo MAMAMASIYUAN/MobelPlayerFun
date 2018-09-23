@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -73,6 +75,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private Button btnVideoNext;
     private Button btnVideoSwitchScreen;
     private RelativeLayout media_controller;
+    private TextView tv_buffer_netspeed;
+    private LinearLayout ll_buffer;
 
     private Utils utils;
     private MyReceiver receiver;
@@ -148,6 +152,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         btnVideoNext = (Button)findViewById( R.id.btn_video_next );
         btnVideoSwitchScreen = (Button)findViewById( R.id.btn_video_switch_screen );
         media_controller = (RelativeLayout) findViewById(R.id.media_controller);
+        tv_buffer_netspeed = (TextView) findViewById(R.id.tv_buffer_netspeed);
+        ll_buffer = (LinearLayout) findViewById(R.id.ll_buffer);
 
 
         btnVoice.setOnClickListener( this );
@@ -518,6 +524,11 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
         //Set voice SeekBar listener
         seekbarVoice.setOnSeekBarChangeListener(new VoiceOnSeekBarChangeListener());
+
+        //Set web buffering listener
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            videoView.setOnInfoListener(new MyOnInfoListener());
+        }
     }
 
     public void setBattery(int level) {
@@ -537,6 +548,22 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             ivBattery.setImageResource(R.drawable.ic_battery_100);
         }else {
             ivBattery.setImageResource(R.drawable.ic_battery_100);
+        }
+    }
+
+    class MyOnInfoListener implements MediaPlayer.OnInfoListener {
+
+        @Override
+        public boolean onInfo(MediaPlayer mp, int what, int extra) {
+            switch (what){
+                case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                    ll_buffer.setVisibility(View.VISIBLE);
+                    break;
+                case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                    ll_buffer.setVisibility(View.GONE);
+                    break;
+            }
+            return false;
         }
     }
 
