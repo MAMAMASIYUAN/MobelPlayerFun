@@ -222,6 +222,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             if(position >= 0){
                 MediaItem mediaItem = mediaItems.get(position);
                 tvName.setText(mediaItem.getName());
+                isNetUri = utils.isNetUri(mediaItem.getData());
                 videoView.setVideoPath(mediaItem.getData());
 
                 //Set Button state
@@ -243,6 +244,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             if(position < mediaItems.size()){
                 MediaItem mediaItem = mediaItems.get(position);
                 tvName.setText(mediaItem.getName());
+                isNetUri = utils.isNetUri(mediaItem.getData());
                 videoView.setVideoPath(mediaItem.getData());
 
                 //Set Button state
@@ -332,6 +334,16 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
                     //Update system time
                     tvSystemTime.setText(getSystemTime());
 
+                    //Update net video buffer
+                    if(isNetUri){
+                        int buffer = videoView.getBufferPercentage();
+                        int totalBuffer = buffer * seekbarVideo.getMax();
+                        int secondaryProgress = totalBuffer / 100;
+                        seekbarVideo.setSecondaryProgress(secondaryProgress);
+                    }else {
+                        seekbarVideo.setSecondaryProgress(0);
+                    }
+
                     //3. Update the progress every 1 second
                     handler.removeMessages(PROGRESS);
                     handler.sendEmptyMessageDelayed(PROGRESS, 1000);
@@ -365,9 +377,10 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         if(mediaItems != null && mediaItems.size() >= 0){
             MediaItem mediaItem = mediaItems.get(position);
             tvName.setText(mediaItem.getName());
-//            isNetUri = utils.isNetUri(mediaItem.getData());
+            isNetUri = utils.isNetUri(mediaItem.getData());
             videoView.setVideoPath(mediaItem.getData());
         }else if(uri != null){
+            isNetUri = utils.isNetUri(uri.toString());
             tvName.setText(uri.toString());
             videoView.setVideoURI(uri);
         }else{
