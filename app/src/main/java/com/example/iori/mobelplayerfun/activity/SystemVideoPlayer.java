@@ -19,6 +19,7 @@ import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +39,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class SystemVideoPlayer extends Activity implements View.OnClickListener {
+
+    /**
+     * Is using the system to listen buffering
+     */
+    private boolean isUseSystem = true;
+
     /**
      * Update video progress
      */
@@ -119,6 +126,10 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      */
     private boolean isMute = false;
 
+    /**
+     * last playing position
+     */
+    private int preCurrentPosition;
 
 
     @Override
@@ -322,6 +333,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     }
 
 
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -349,6 +361,23 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
                     }else {
                         seekbarVideo.setSecondaryProgress(0);
                     }
+
+                    //Listen net video buffering
+                    if(!isUseSystem){
+                        int buffer = currentPosition - preCurrentPosition;
+
+                        if(videoView.isPlaying()){
+                            if (buffer < 500){
+                                ll_buffer.setVisibility(View.VISIBLE);
+                            }else{
+                                ll_buffer.setVisibility(View.GONE);
+                            }
+                        }else{
+                            ll_buffer.setVisibility(View.GONE);
+                        }
+
+                    }
+                    preCurrentPosition = currentPosition;
 
                     //3. Update the progress every 1 second
                     handler.removeMessages(PROGRESS);
