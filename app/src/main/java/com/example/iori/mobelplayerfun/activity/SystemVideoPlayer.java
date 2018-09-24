@@ -84,6 +84,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private RelativeLayout media_controller;
     private TextView tv_buffer_netspeed;
     private LinearLayout ll_buffer;
+    private TextView tv_loading_netspeed;
+    private LinearLayout ll_loading;
 
     private Utils utils;
     private MyReceiver receiver;
@@ -165,6 +167,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         media_controller = (RelativeLayout) findViewById(R.id.media_controller);
         tv_buffer_netspeed = (TextView) findViewById(R.id.tv_buffer_netspeed);
         ll_buffer = (LinearLayout) findViewById(R.id.ll_buffer);
+        ll_loading = (LinearLayout) findViewById(R.id.ll_loading);
+        tv_loading_netspeed = (TextView) findViewById(R.id.tv_loading_netspeed);
 
 
         btnVoice.setOnClickListener( this );
@@ -237,6 +241,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             //Play next
             position--;
             if(position >= 0){
+                ll_loading.setVisibility(View.VISIBLE);
                 MediaItem mediaItem = mediaItems.get(position);
                 tvName.setText(mediaItem.getName());
                 isNetUri = utils.isNetUri(mediaItem.getData());
@@ -259,6 +264,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             //Play next
             position++;
             if(position < mediaItems.size()){
+                ll_loading.setVisibility(View.VISIBLE);
                 MediaItem mediaItem = mediaItems.get(position);
                 tvName.setText(mediaItem.getName());
                 isNetUri = utils.isNetUri(mediaItem.getData());
@@ -693,6 +699,16 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 //            videoView.setVideoSise(200, 200);
 
             setVideoType(DEFAULT_SCREEN);
+
+//            mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+//                @Override
+//                public void onSeekComplete(MediaPlayer mp) {
+//                    Toast.makeText(SystemVideoPlayer.this, "Seek done.", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+
+            //Close the loading page
+            ll_loading.setVisibility(View.GONE);
         }
     }
 

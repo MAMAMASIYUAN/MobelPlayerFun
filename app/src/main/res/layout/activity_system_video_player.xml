@@ -11,5 +11,6 @@
         android:layout_height="wrap_content" />
 
     <include layout="@layout/media_controller" android:id="@+id/media_controller"/>
+    <include layout="@layout/ll_loading" android:id="@+id/ll_loading" />
 
 </RelativeLayout>
