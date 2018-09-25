@@ -40,6 +40,7 @@ import java.util.Date;
 
 public class SystemVideoPlayer extends Activity implements View.OnClickListener {
 
+
     /**
      * Is using the system to listen buffering
      */
@@ -50,6 +51,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      */
     private static final int PROGRESS = 1;
     private static final int HIDE_MEDIACONTROLLER = 2;
+    private static final int SHOW_SPEED = 3;
     /**
      * Full screen
      */
@@ -181,6 +183,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
         seekbarVoice.setMax(maxVoice);//关联最大音量
         seekbarVoice.setProgress(currentVoice);//设置当前音量
+
+        handler.sendEmptyMessage(SHOW_SPEED);
     }
 
     /**
@@ -345,6 +349,16 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
+                case SHOW_SPEED:
+                    //Get net speed
+                    String netSpeed = utils.getNetSpeed(SystemVideoPlayer.this);
+                    //Display net spped
+                    tv_loading_netspeed.setText("Loading..." + netSpeed);
+                    tv_buffer_netspeed.setText("Buffering..." + netSpeed);
+                    //Update the progress every 2 second
+                    handler.removeMessages(SHOW_SPEED);
+                    handler.sendEmptyMessageDelayed(SHOW_SPEED, 2000);
+                    break;
                 case HIDE_MEDIACONTROLLER:
                     hideMediaController();
                     break;

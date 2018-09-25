@@ -13,7 +13,6 @@ public class Utils {
 
     private long lastTotalRxBytes = 0;
     private long lastTimeStamp = 0;
-
     public Utils() {
         // 转换成字符串的时间
         mFormatBuilder = new StringBuilder();
@@ -78,5 +77,4 @@ public class Utils {
         netSpeed  = String.valueOf(speed) + " kb/s";
         return  netSpeed;
     }
-
 }
