@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 
 import io.vov.vitamio.widget.VideoView;
 
-public class VitamioVideoView extends VideoView {
+public class VitamioVideoView extends io.vov.vitamio.widget.VideoView {
 
     /**
      * 在代码中创建的时候一般用这个方法

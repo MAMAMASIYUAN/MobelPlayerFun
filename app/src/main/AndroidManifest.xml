@@ -87,6 +87,13 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.VitamioVideoPlayer"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            />
+
     </application>
 
 </manifest>

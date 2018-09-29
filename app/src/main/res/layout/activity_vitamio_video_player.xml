@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <com.example.com.example.iori.mobelplayerfun.view.VitamioVideoView.mobelplayerfun.view.VideoView
+    <com.example.iori.mobelplayerfun.view.VitamioVideoView
+
         android:id="@+id/videoView"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"

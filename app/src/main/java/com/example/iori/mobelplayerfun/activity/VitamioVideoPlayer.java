@@ -150,7 +150,7 @@ public class VitamioVideoPlayer extends Activity implements View.OnClickListener
      */
     private void findViews() {
         Vitamio.isInitialized(this);
-        setContentView(R.layout.activity_system_video_player);
+        setContentView(R.layout.activity_vitamio_video_player);
         videoView = (VitamioVideoView) findViewById(R.id.videoView);
         llTop = (LinearLayout)findViewById( R.id.ll_top );
         tvName = (TextView)findViewById( R.id.tv_name );

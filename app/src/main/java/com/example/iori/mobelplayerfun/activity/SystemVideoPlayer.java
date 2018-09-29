@@ -763,9 +763,33 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
         @Override
         public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-            Toast.makeText(SystemVideoPlayer.this, "播放出错了！", Toast.LENGTH_SHORT).show();
-            return false;
+//            Toast.makeText(SystemVideoPlayer.this, "播放出错了！", Toast.LENGTH_SHORT).show();
+            //1. 如果视频格式不支持，跳转万能播放器
+            startVitamioPlayer();
+            //2. 播放网络视频时，如果网络中断。 1，判断是否真的断了，然后提示。2，网络不稳定，重新播放
+            //3. 本地文件中间有空白，下载完成
+            return true;
         }
+    }
+
+    private void startVitamioPlayer() {
+
+        if(videoView != null){
+            videoView.stopPlayback();
+        }
+
+        Intent intent = new Intent(this, VitamioVideoPlayer.class);
+        if(mediaItems != null && mediaItems.size() > 0){
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("videolist", mediaItems);
+            intent.putExtras(bundle);
+            intent.putExtra("position", position);
+        }else if(uri != null){
+            intent.setData(uri);
+        }
+        startActivity(intent);
+        finish();
+
     }
 
     class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
