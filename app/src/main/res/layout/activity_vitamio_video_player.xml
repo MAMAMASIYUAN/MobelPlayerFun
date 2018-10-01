@@ -6,6 +6,7 @@
 
     <com.example.iori.mobelplayerfun.view.VitamioVideoView
 
+
         android:id="@+id/videoView"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"

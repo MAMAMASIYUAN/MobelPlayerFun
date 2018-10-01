@@ -1,8 +1,11 @@
 package com.example.iori.mobelplayerfun.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
@@ -765,9 +768,25 @@ public class VitamioVideoPlayer extends Activity implements View.OnClickListener
 
         @Override
         public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-            Toast.makeText(VitamioVideoPlayer.this, "播放出错了！", Toast.LENGTH_SHORT).show();
-            return false;
+//            Toast.makeText(VitamioVideoPlayer.this, "播放出错了！", Toast.LENGTH_SHORT).show();
+            showErrorDialog();
+
+            return true;
         }
+    }
+
+    private void showErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("抱歉，无法播放该视频！！");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
     }
 
     class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
