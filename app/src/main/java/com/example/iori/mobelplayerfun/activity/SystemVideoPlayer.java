@@ -1,8 +1,10 @@
 package com.example.iori.mobelplayerfun.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
@@ -201,6 +203,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             updateVoice(currentVoice, isMute);
         } else if ( v == btnSwitchPlayer ) {
             // Handle clicks for btnSwitchPlayer
+            switchVitamioPlayer();
         } else if ( v == btnExit ) {
             // Handle clicks for btnExit
             finish();
@@ -219,6 +222,22 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         }
         handler.removeMessages(HIDE_MEDIACONTROLLER);
         handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 5000);
+    }
+
+    private void switchVitamioPlayer() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("当你发现视频只有声音没有画面时，请使用万能播放器！");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startVitamioPlayer();
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
     }
 
     private void startAndPause() {

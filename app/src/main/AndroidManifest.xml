@@ -49,11 +49,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            ></activity>
         <activity android:name=".activity.SystemVideoPlayer"
             android:screenOrientation="landscape"
             android:label="@string/player_name"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@style/noAnimation_Theme"
             android:configChanges="keyboardHidden|screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -90,7 +91,7 @@
         <activity
             android:name=".activity.VitamioVideoPlayer"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@style/noAnimation_Theme"
             android:configChanges="keyboardHidden|screenSize|orientation"
             />
 
