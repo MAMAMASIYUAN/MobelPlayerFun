@@ -474,6 +474,11 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
     @Override
     protected void onDestroy() {
+        /**
+         * Remove all message
+         *
+         */
+        handler.removeCallbacksAndMessages(null);
         if(receiver != null){
             unregisterReceiver(receiver);
             receiver = null;

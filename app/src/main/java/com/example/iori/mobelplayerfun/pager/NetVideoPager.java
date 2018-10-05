@@ -5,18 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.iori.mobelplayerfun.R;
 import com.example.iori.mobelplayerfun.activity.SystemVideoPlayer;
 import com.example.iori.mobelplayerfun.adapter.NetVideoPagerAdapter;
-import com.example.iori.mobelplayerfun.adapter.VideoPagerAdapter;
 import com.example.iori.mobelplayerfun.base.BasePager;
 import com.example.iori.mobelplayerfun.domain.MediaItem;
 import com.example.iori.mobelplayerfun.utils.Constants;
 import com.example.iori.mobelplayerfun.utils.LogUtil;
+import com.example.iori.mobelplayerfun.view.XListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +25,9 @@ import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NetVideoPager extends BasePager {
 
@@ -35,9 +36,10 @@ public class NetVideoPager extends BasePager {
      */
     private ArrayList<MediaItem> mediaItems;
     private NetVideoPagerAdapter adapter;
+    private boolean isLoadMore = false;
 
     @ViewInject(R.id.listview)
-    private ListView mListView;
+    private XListView mListView;
 
     @ViewInject(R.id.tv_nonet)
     private TextView mTv_nonet;
@@ -55,7 +57,69 @@ public class NetVideoPager extends BasePager {
         x.view().inject(this, view);
         //设置ListView的item的点击事件
         mListView.setOnItemClickListener(new NetVideoPager.MyOnItemClickListener());
+        mListView.setPullLoadEnable(true);
+        mListView.setXListViewListener(new MyIXListViewListener());
         return view;
+    }
+
+    class MyIXListViewListener implements XListView.IXListViewListener{
+
+        @Override
+        public void onRefresh() {
+
+            getDataFromNet();
+        }
+
+        @Override
+        public void onLoadMore() {
+
+            getMoreDataFromNet();
+        }
+    }
+
+    private void getMoreDataFromNet() {
+        RequestParams requestParams = new RequestParams(Constants.NET_URL);
+        x.http().get(requestParams, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                LogUtil.e("Net Connection success" + result);
+                isLoadMore = true;
+                processData(result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                LogUtil.e("Net Connection failed" + ex.getMessage());
+                isLoadMore = false;
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                LogUtil.e("onCancelled" + cex);
+                isLoadMore = false;
+
+            }
+
+            @Override
+            public void onFinished() {
+                LogUtil.e("On Finished");
+                isLoadMore = false;
+
+            }
+        });
+    }
+
+    private void onLoad() {
+        mListView.stopRefresh();
+        mListView.stopLoadMore();
+        mListView.setRefreshTime("更新时间为:" + getSystemTime());
+    }
+
+    private String getSystemTime() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+
+        return format.format(new Date());
     }
 
     class MyOnItemClickListener implements AdapterView.OnItemClickListener {
@@ -67,7 +131,7 @@ public class NetVideoPager extends BasePager {
             Bundle bundle = new Bundle();
             bundle.putSerializable("videolist", mediaItems);
             intent.putExtras(bundle);
-            intent.putExtra("position", position);
+            intent.putExtra("position", position - 1);
             context.startActivity(intent);
         }
     }
@@ -79,6 +143,10 @@ public class NetVideoPager extends BasePager {
         //联网
         //视频内容
 
+        getDataFromNet();
+    }
+
+    private void getDataFromNet() {
         RequestParams requestParams = new RequestParams(Constants.NET_URL);
         x.http().get(requestParams, new Callback.CommonCallback<String>() {
             @Override
@@ -109,17 +177,28 @@ public class NetVideoPager extends BasePager {
 
     private void processData(String json) {
 
-        mediaItems = parseJson(json);
-        if(mediaItems != null && mediaItems.size() > 0){
-            adapter = new NetVideoPagerAdapter(context, mediaItems);
-            mListView.setAdapter(adapter);
-            mTv_nonet.setVisibility(View.GONE);
+        if(!isLoadMore){
 
+            mediaItems = parseJson(json);
+            if(mediaItems != null && mediaItems.size() > 0){
+                adapter = new NetVideoPagerAdapter(context, mediaItems);
+                mListView.setAdapter(adapter);
+                mTv_nonet.setVisibility(View.GONE);
+                onLoad();
+
+            }else {
+                mTv_nonet.setVisibility(View.VISIBLE);
+            }
+
+            mPb_loading.setVisibility(View.GONE);
         }else {
-            mTv_nonet.setVisibility(View.VISIBLE);
+            isLoadMore = false;
+            mediaItems.addAll(parseJson(json));
+            adapter.notifyDataSetChanged();
+            onLoad();
         }
 
-        mPb_loading.setVisibility(View.GONE);
+
 
     }
 
