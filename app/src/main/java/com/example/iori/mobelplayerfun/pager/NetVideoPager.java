@@ -3,20 +3,20 @@ package com.example.iori.mobelplayerfun.pager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.example.iori.mobelplayerfun.R;
 import com.example.iori.mobelplayerfun.activity.SystemVideoPlayer;
 import com.example.iori.mobelplayerfun.adapter.NetVideoPagerAdapter;
 import com.example.iori.mobelplayerfun.base.BasePager;
 import com.example.iori.mobelplayerfun.domain.MediaItem;
+import com.example.iori.mobelplayerfun.utils.CacheUtils;
 import com.example.iori.mobelplayerfun.utils.Constants;
 import com.example.iori.mobelplayerfun.utils.LogUtil;
 import com.example.iori.mobelplayerfun.view.XListView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +24,6 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -140,9 +139,10 @@ public class NetVideoPager extends BasePager {
     public void initData() {
         super.initData();
         LogUtil.e("网络视频页面数据初始化了");
-        //联网
-        //视频内容
-
+        String saveJson = CacheUtils.getString(context, Constants.NET_URL);
+        if(!TextUtils.isEmpty(saveJson)){
+            processData(saveJson);
+        }
         getDataFromNet();
     }
 
@@ -158,6 +158,7 @@ public class NetVideoPager extends BasePager {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 LogUtil.e("Net Connection failed" + ex.getMessage());
+                showData();
 
             }
 
@@ -180,17 +181,7 @@ public class NetVideoPager extends BasePager {
         if(!isLoadMore){
 
             mediaItems = parseJson(json);
-            if(mediaItems != null && mediaItems.size() > 0){
-                adapter = new NetVideoPagerAdapter(context, mediaItems);
-                mListView.setAdapter(adapter);
-                mTv_nonet.setVisibility(View.GONE);
-                onLoad();
-
-            }else {
-                mTv_nonet.setVisibility(View.VISIBLE);
-            }
-
-            mPb_loading.setVisibility(View.GONE);
+            showData();
         }else {
             isLoadMore = false;
             mediaItems.addAll(parseJson(json));
@@ -198,8 +189,20 @@ public class NetVideoPager extends BasePager {
             onLoad();
         }
 
+    }
 
+    private void showData() {
+        if(mediaItems != null && mediaItems.size() > 0){
+            adapter = new NetVideoPagerAdapter(context, mediaItems);
+            mListView.setAdapter(adapter);
+            mTv_nonet.setVisibility(View.GONE);
+            onLoad();
 
+        }else {
+            mTv_nonet.setVisibility(View.VISIBLE);
+        }
+
+        mPb_loading.setVisibility(View.GONE);
     }
 
     private ArrayList<MediaItem> parseJson(String json) {
