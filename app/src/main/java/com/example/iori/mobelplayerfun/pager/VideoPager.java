@@ -43,7 +43,7 @@ public class VideoPager extends BasePager {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(mediaItems != null && mediaItems.size() > 0){
-                videoPagerAdapter = new VideoPagerAdapter(context, mediaItems);
+                videoPagerAdapter = new VideoPagerAdapter(context, mediaItems, true);
                 listview.setAdapter(videoPagerAdapter);
                 tv_nomedia.setVisibility(View.GONE);
 
