@@ -6,7 +6,6 @@
     android:versionName="0.0.2" >
 
     <uses-sdk
-        android:targetSdkVersion="27"
         tools:overrideLibrary="io.vov.vitamio" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
