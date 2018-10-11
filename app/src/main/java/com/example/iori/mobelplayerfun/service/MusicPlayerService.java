@@ -163,6 +163,11 @@ public class MusicPlayerService extends Service {
         public int getPlayMode() throws RemoteException {
             return service.getPlayMode();
         }
+
+        @Override
+        public boolean isPlaying() throws RemoteException {
+            return service.isPlaying();
+        }
     };
 
     /**
@@ -316,6 +321,14 @@ public class MusicPlayerService extends Service {
      */
     private int getPlayMode(){
         return 0;
+    }
+
+    /**
+     * 得到是否播放
+     * @return
+     */
+    private boolean isPlaying(){
+        return mediaPlayer.isPlaying();
     }
 
 

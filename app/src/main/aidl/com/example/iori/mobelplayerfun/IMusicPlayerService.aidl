@@ -81,4 +81,10 @@ interface IMusicPlayerService {
          * @return
          */
          int getPlayMode();
+
+         /**
+          * 得到是否播放
+          * @return
+          */
+          boolean isPlaying();
 }
