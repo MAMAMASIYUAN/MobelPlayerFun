@@ -1,9 +1,11 @@
 package com.example.iori.mobelplayerfun.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -40,16 +42,45 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
     private Button btnLyrc;
 
     private IMusicPlayerService service;
+    private MyReceiver receiver;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initData();
         findViews();
         getData();
         bindAndStartService();
 
 
+    }
+
+    private void initData() {
+
+        receiver = new MyReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MusicPlayerService.OPENAUTIO);
+        registerReceiver(receiver, intentFilter);
+
+    }
+
+    class MyReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            showViewData();
+        }
+    }
+
+    private void showViewData() {
+        try {
+            tvArtist.setText(service.getArtist());
+            tvName.setText(service.getName());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private ServiceConnection con = new ServiceConnection() {

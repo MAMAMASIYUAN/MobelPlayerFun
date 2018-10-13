@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 public class MusicPlayerService extends Service {
 
+    public static final String OPENAUTIO = "com.atm.mediaplayer.OPENAUTIO";
     private ArrayList<Object> mediaItems;
     private int position;
     private MediaItem mediaItem;
@@ -214,8 +215,15 @@ public class MusicPlayerService extends Service {
 
         @Override
         public void onPrepared(MediaPlayer mp) {
+
+            notifyChange(OPENAUTIO);
             start();
         }
+    }
+
+    private void notifyChange(String action) {
+        Intent intent = new Intent(action);
+        sendBroadcast(intent);
     }
 
     class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
@@ -272,7 +280,7 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private String getArtist(){
-        return "";
+        return mediaItem.getArtist();
     }
 
     /**
@@ -280,7 +288,7 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private String getName(){
-        return "";
+        return mediaItem.getName();
     }
 
 
