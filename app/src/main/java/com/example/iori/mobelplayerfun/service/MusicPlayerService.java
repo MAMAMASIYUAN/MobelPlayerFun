@@ -169,6 +169,11 @@ public class MusicPlayerService extends Service {
         public boolean isPlaying() throws RemoteException {
             return service.isPlaying();
         }
+
+        @Override
+        public void seekTo(int position) throws RemoteException {
+            mediaPlayer.seekTo(position);
+        }
     };
 
     /**
@@ -263,7 +268,7 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private int getCurrentPosition(){
-        return 0;
+        return mediaPlayer.getCurrentPosition();
     }
 
 
@@ -272,7 +277,7 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private int getDuration(){
-        return 0;
+        return (int) mediaItem.getDuration();
     }
 
     /**

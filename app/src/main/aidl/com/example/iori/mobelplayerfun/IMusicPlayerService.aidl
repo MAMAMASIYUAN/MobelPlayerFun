@@ -87,4 +87,9 @@ interface IMusicPlayerService {
           * @return
           */
           boolean isPlaying();
+
+          /**
+           * 得到拖拽位置
+           */
+           void seekTo(int position);
 }

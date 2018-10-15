@@ -9,7 +9,9 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -23,9 +25,11 @@ import android.widget.TextView;
 import com.example.iori.mobelplayerfun.IMusicPlayerService;
 import com.example.iori.mobelplayerfun.R;
 import com.example.iori.mobelplayerfun.service.MusicPlayerService;
+import com.example.iori.mobelplayerfun.utils.Utils;
 
 public class AudioPlayerActivity extends Activity implements View.OnClickListener {
 
+    private static final int PROGRESS = 1;
     private int position;
 
 
@@ -43,6 +47,7 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
 
     private IMusicPlayerService service;
     private MyReceiver receiver;
+    private Utils utils;
 
 
     @Override
@@ -58,6 +63,7 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
 
     private void initData() {
 
+        utils = new Utils();
         receiver = new MyReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicPlayerService.OPENAUTIO);
@@ -78,10 +84,35 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
         try {
             tvArtist.setText(service.getArtist());
             tvName.setText(service.getName());
+            seekbarAudio.setMax(service.getDuration());
+            //发送消息
+            handler.sendEmptyMessage(PROGRESS);
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what){
+                case PROGRESS:
+                    try {
+                        int currentPosition = service.getCurrentPosition();
+                        seekbarAudio.setProgress(currentPosition);
+                        tvTime.setText(utils.stringForTime(service.getCurrentPosition()) + "/" + utils.stringForTime(service.getDuration()));
+                        handler.removeMessages(PROGRESS);
+                        handler.sendEmptyMessageDelayed(PROGRESS, 1000);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    };
 
     private ServiceConnection con = new ServiceConnection() {
 
@@ -163,6 +194,32 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
         btnAudioStartPause.setOnClickListener( this );
         btnAudioNext.setOnClickListener( this );
         btnLyrc.setOnClickListener( this );
+
+        seekbarAudio.setOnSeekBarChangeListener(new MyOnSeekBarChangeListener());
+    }
+
+    class MyOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener{
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if(fromUser){
+                try {
+                    service.seekTo(progress);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
     }
 
     /**
