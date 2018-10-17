@@ -258,7 +258,7 @@ public class MusicPlayerService extends Service {
         mediaPlayer.start();
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, AudioPlayerActivity.class);
-        intent.putExtra("Notification", true);
+        intent.putExtra("notification", true);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.notification_music_playing)

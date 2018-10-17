@@ -31,6 +31,11 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
 
     private static final int PROGRESS = 1;
     private int position;
+    /**
+     * 1. True, 来自于状态栏
+     * 2. Faults，来自于列表
+     */
+    private boolean notification;
 
 
     private ImageView ivIcon;
@@ -127,7 +132,12 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
 
             if(service != null){
                 try {
-                    service.openAudio(position);
+                    if(!notification){
+                        service.openAudio(position);
+                    }else{
+                        showViewData();
+                    }
+
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -161,7 +171,11 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
     }
 
     private void getData() {
-        position = getIntent().getIntExtra("position", 0);
+        notification = getIntent().getBooleanExtra("notification", false);
+        if(!notification){
+            position = getIntent().getIntExtra("position", 0);
+        }
+
     }
 
      /**
