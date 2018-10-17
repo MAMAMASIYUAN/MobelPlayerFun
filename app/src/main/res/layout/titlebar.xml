@@ -6,11 +6,13 @@
     android:background="#ff3097fd"
     android:orientation="horizontal">
 
-    <ImageView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:src="@drawable/ic_topbanner_logo" />
+        android:text="M影音"
+        android:textColor="#ffffff"
+        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/tv_search"
