@@ -1,18 +1,25 @@
 package com.example.iori.mobelplayerfun.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.widget.Toast;
 
 import com.example.iori.mobelplayerfun.IMusicPlayerService;
+import com.example.iori.mobelplayerfun.R;
+import com.example.iori.mobelplayerfun.activity.AudioPlayerActivity;
 import com.example.iori.mobelplayerfun.domain.MediaItem;
 
 import java.io.IOException;
@@ -24,6 +31,7 @@ public class MusicPlayerService extends Service {
     private int position;
     private MediaItem mediaItem;
     private MediaPlayer mediaPlayer;
+    private NotificationManager manager;
 
 
     @Override
@@ -186,7 +194,7 @@ public class MusicPlayerService extends Service {
         if(mediaItems != null && mediaItems.size() > 0){
             mediaItem = (MediaItem) mediaItems.get(position);
             if(mediaPlayer != null){
-                mediaPlayer.release();
+//                mediaPlayer.release();
                 mediaPlayer.reset();
             }
 
@@ -218,6 +226,7 @@ public class MusicPlayerService extends Service {
 
     class MyOnPreparedListener implements MediaPlayer.OnPreparedListener{
 
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onPrepared(MediaPlayer mp) {
 
@@ -243,9 +252,21 @@ public class MusicPlayerService extends Service {
     /**
      * 播放音乐
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void start(){
 
         mediaPlayer.start();
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this, AudioPlayerActivity.class);
+        intent.putExtra("Notification", true);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification notification = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.notification_music_playing)
+                .setContentTitle("Media Player")
+                .setContentText("正在播放：" + getName())
+                .setContentIntent(pendingIntent)
+                .build();
+        manager.notify(1,notification);
     }
 
     /**
@@ -254,6 +275,7 @@ public class MusicPlayerService extends Service {
     private void pause(){
 
         mediaPlayer.pause();
+        manager.cancel(1);
     }
 
     /**

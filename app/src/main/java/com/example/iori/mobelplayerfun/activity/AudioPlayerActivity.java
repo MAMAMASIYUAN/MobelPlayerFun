@@ -260,4 +260,20 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        handler.removeCallbacksAndMessages(null);
+        if(receiver != null){
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
+
+        if(con != null){
+            unbindService(con);
+            con = null;
+        }
+    }
 }
