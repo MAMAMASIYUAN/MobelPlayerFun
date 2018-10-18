@@ -21,6 +21,7 @@ import com.example.iori.mobelplayerfun.IMusicPlayerService;
 import com.example.iori.mobelplayerfun.R;
 import com.example.iori.mobelplayerfun.activity.AudioPlayerActivity;
 import com.example.iori.mobelplayerfun.domain.MediaItem;
+import com.example.iori.mobelplayerfun.utils.CacheUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,11 +33,17 @@ public class MusicPlayerService extends Service {
     private MediaItem mediaItem;
     private MediaPlayer mediaPlayer;
     private NotificationManager manager;
+    public static final int REPREAT_NORMAL = 1;
+    public static final int REPREAT_SINGLE = 2;
+    public static final int REPREAT_ALL = 3;
+    private int playMode = 1;
+
 
 
     @Override
     public void onCreate() {
         super.onCreate();
+        playMode = CacheUtils.getPlayMode(this, "playmode");
         getDataFromLocal();
     }
 
@@ -107,6 +114,7 @@ public class MusicPlayerService extends Service {
             service.openAudio(position);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void start() throws RemoteException {
 
@@ -275,7 +283,7 @@ public class MusicPlayerService extends Service {
     private void pause(){
 
         mediaPlayer.pause();
-        manager.cancel(1);
+//        manager.cancel(1);
     }
 
     /**
@@ -348,6 +356,8 @@ public class MusicPlayerService extends Service {
      */
     private void setPlayMode(int playmode){
 
+        this.playMode = playmode;
+        CacheUtils.putPlayMode(this, "playmode", playMode);
     }
 
     /**
@@ -355,7 +365,7 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private int getPlayMode(){
-        return 0;
+        return playMode;
     }
 
     /**

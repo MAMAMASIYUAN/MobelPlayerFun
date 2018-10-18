@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.iori.mobelplayerfun.IMusicPlayerService;
 import com.example.iori.mobelplayerfun.R;
@@ -36,7 +37,6 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
      * 2. Faults，来自于列表
      */
     private boolean notification;
-
 
     private ImageView ivIcon;
     private TextView tvArtist;
@@ -82,6 +82,7 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
         public void onReceive(Context context, Intent intent) {
 
             showViewData();
+            checkPlayMode();
         }
     }
 
@@ -246,6 +247,8 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
     public void onClick(View v) {
         if ( v == btnAudioPlaymode ) {
             // Handle clicks for btnAudioPlaymode
+            setPlayMode();
+
         } else if ( v == btnAudioPre ) {
             // Handle clicks for btnAudioPre
         } else if ( v == btnAudioStartPause ) {
@@ -268,6 +271,71 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
         } else if ( v == btnLyrc ) {
             // Handle clicks for btnLyrc
         }
+    }
+
+    private void setPlayMode() {
+
+        try {
+            int playMode = service.getPlayMode();
+            if(playMode == MusicPlayerService.REPREAT_NORMAL){
+                playMode = MusicPlayerService.REPREAT_SINGLE;
+            }else if(playMode == MusicPlayerService.REPREAT_SINGLE){
+                playMode = MusicPlayerService.REPREAT_ALL;
+            }else if(playMode == MusicPlayerService.REPREAT_ALL){
+                playMode = MusicPlayerService.REPREAT_NORMAL;
+            }else {
+                playMode = MusicPlayerService.REPREAT_NORMAL;
+            }
+
+            service.setPlayMode(playMode);
+            showPlayMode();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void showPlayMode() {
+
+        try {
+            int playMode = service.getPlayMode();
+            if(playMode == MusicPlayerService.REPREAT_NORMAL){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+                Toast.makeText(AudioPlayerActivity.this, "顺序播放", Toast.LENGTH_SHORT).show();
+            }else if(playMode == MusicPlayerService.REPREAT_SINGLE){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_single_selector);
+                Toast.makeText(AudioPlayerActivity.this, "单曲循环", Toast.LENGTH_SHORT).show();
+            }else if(playMode == MusicPlayerService.REPREAT_ALL){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_all_selector);
+                Toast.makeText(AudioPlayerActivity.this, "全部循环", Toast.LENGTH_SHORT).show();
+            }else {
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+                Toast.makeText(AudioPlayerActivity.this, "顺序播放", Toast.LENGTH_SHORT).show();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void checkPlayMode() {
+
+        try {
+            int playMode = service.getPlayMode();
+            if(playMode == MusicPlayerService.REPREAT_NORMAL){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+            }else if(playMode == MusicPlayerService.REPREAT_SINGLE){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_single_selector);
+            }else if(playMode == MusicPlayerService.REPREAT_ALL) {
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_all_selector);
+            }else {
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

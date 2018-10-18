@@ -96,7 +96,7 @@
             android:configChanges="keyboardHidden|screenSize|orientation"
             />
 
-        <activity android:name=".activity.AudioPlayerActivity"/>
+        <activity android:name=".activity.AudioPlayerActivity" android:launchMode="singleTask"/>
 
         <service android:name=".service.MusicPlayerService">
             <intent-filter>
