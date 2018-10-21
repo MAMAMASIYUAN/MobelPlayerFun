@@ -220,6 +220,12 @@ public class MusicPlayerService extends Service {
             Toast.makeText(MusicPlayerService.this,"还没有数据", Toast.LENGTH_SHORT).show();
         }
 
+        if(playMode == MusicPlayerService.REPREAT_SINGLE){
+            mediaPlayer.setLooping(true);
+        }else {
+            mediaPlayer.setLooping(false);
+        }
+
 
     }
 
@@ -340,6 +346,51 @@ public class MusicPlayerService extends Service {
      */
     private void next(){
 
+        setNextPosition();
+        openNextAudio();
+
+    }
+
+    private void openNextAudio() {
+
+        int playMode = getPlayMode();
+        if(playMode == MusicPlayerService.REPREAT_NORMAL){
+            if(position < mediaItems.size()){
+                openAudio(position);
+            }else {
+                position = mediaItems.size() - 1;
+            }
+        }else if(playMode == MusicPlayerService.REPREAT_SINGLE){
+            openAudio(position);
+        }else if(playMode == MusicPlayerService.REPREAT_ALL){
+            openAudio(position);
+        }else {
+            if(position < mediaItems.size()){
+                openAudio(position);
+            }else {
+                position = mediaItems.size() - 1;
+            }
+        }
+    }
+
+    private void setNextPosition() {
+
+        int playMode = getPlayMode();
+        if(playMode == MusicPlayerService.REPREAT_NORMAL){
+            position++;
+        }else if(playMode == MusicPlayerService.REPREAT_SINGLE){
+            position++;
+            if(position >= mediaItems.size()){
+                position = 0;
+            }
+        }else if(playMode == MusicPlayerService.REPREAT_ALL){
+            position++;
+            if(position >= mediaItems.size()){
+                position = 0;
+            }
+        }else {
+            position++;
+        }
     }
 
 
@@ -348,6 +399,51 @@ public class MusicPlayerService extends Service {
      */
     private void pre(){
 
+        setPrePosition();
+        openPreAudio();
+
+    }
+
+    private void openPreAudio() {
+
+        int playMode = getPlayMode();
+        if(playMode == MusicPlayerService.REPREAT_NORMAL){
+            if(position >= 0){
+                openAudio(position);
+            }else {
+                position = 0;
+            }
+        }else if(playMode == MusicPlayerService.REPREAT_SINGLE){
+            openAudio(position);
+        }else if(playMode == MusicPlayerService.REPREAT_ALL){
+            openAudio(position);
+        }else {
+            if(position >= 0){
+                openAudio(position);
+            }else {
+                position = 0;
+            }
+        }
+    }
+
+    private void setPrePosition() {
+
+        int playMode = getPlayMode();
+        if(playMode == MusicPlayerService.REPREAT_NORMAL){
+            position--;
+        }else if(playMode == MusicPlayerService.REPREAT_SINGLE){
+            position--;
+            if(position < 0){
+                position = mediaItems.size() - 1;
+            }
+        }else if(playMode == MusicPlayerService.REPREAT_ALL){
+            position--;
+            if(position < 0){
+                position = mediaItems.size() - 1;
+            }
+        }else {
+            position--;
+        }
     }
 
     /**
@@ -358,6 +454,12 @@ public class MusicPlayerService extends Service {
 
         this.playMode = playmode;
         CacheUtils.putPlayMode(this, "playmode", playMode);
+
+        if(playmode == MusicPlayerService.REPREAT_SINGLE){
+            mediaPlayer.setLooping(true);
+        }else {
+            mediaPlayer.setLooping(false);
+        }
     }
 
     /**

@@ -251,6 +251,13 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
 
         } else if ( v == btnAudioPre ) {
             // Handle clicks for btnAudioPre
+            if(service != null){
+                try {
+                    service.pre();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
         } else if ( v == btnAudioStartPause ) {
             // Handle clicks for btnAudioStartPause
             if(service != null){
@@ -268,6 +275,13 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
             }
         } else if ( v == btnAudioNext ) {
             // Handle clicks for btnAudioNext
+            if(service != null){
+                try {
+                    service.next();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
         } else if ( v == btnLyrc ) {
             // Handle clicks for btnLyrc
         }
