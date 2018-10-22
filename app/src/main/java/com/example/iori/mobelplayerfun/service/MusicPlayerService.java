@@ -23,6 +23,8 @@ import com.example.iori.mobelplayerfun.activity.AudioPlayerActivity;
 import com.example.iori.mobelplayerfun.domain.MediaItem;
 import com.example.iori.mobelplayerfun.utils.CacheUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.util.ArrayList;
 public class MusicPlayerService extends Service {
@@ -244,7 +246,8 @@ public class MusicPlayerService extends Service {
         @Override
         public void onPrepared(MediaPlayer mp) {
 
-            notifyChange(OPENAUTIO);
+//            notifyChange(OPENAUTIO);
+            EventBus.getDefault().post(mediaItem);
             start();
         }
     }

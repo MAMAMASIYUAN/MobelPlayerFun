@@ -29,4 +29,5 @@ dependencies {
     implementation project(':xutils')
     implementation files('libs/picasso-2.5.2.jar')
     implementation files('libs/glide-3.7.0.jar')
+    implementation project(':EventBus')
 }

@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/EventBus/EventBus.iml" filepath="$PROJECT_DIR$/EventBus/EventBus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EventBus3.0_Sample/EventBus3.0_Sample.iml" filepath="$PROJECT_DIR$/EventBus3.0_Sample/EventBus3.0_Sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/MobelPlayerFun.iml" filepath="$PROJECT_DIR$/MobelPlayerFun.iml" />
       <module fileurl="file://$PROJECT_DIR$/StartAllPlayer/StartAllPlayer.iml" filepath="$PROJECT_DIR$/StartAllPlayer/StartAllPlayer.iml" />
       <module fileurl="file://$PROJECT_DIR$/SurfaceViewDemo/SurfaceViewDemo.iml" filepath="$PROJECT_DIR$/SurfaceViewDemo/SurfaceViewDemo.iml" />

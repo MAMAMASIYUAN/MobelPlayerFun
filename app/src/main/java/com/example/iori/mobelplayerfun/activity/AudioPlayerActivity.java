@@ -25,8 +25,15 @@ import android.widget.Toast;
 
 import com.example.iori.mobelplayerfun.IMusicPlayerService;
 import com.example.iori.mobelplayerfun.R;
+import com.example.iori.mobelplayerfun.domain.MediaItem;
 import com.example.iori.mobelplayerfun.service.MusicPlayerService;
 import com.example.iori.mobelplayerfun.utils.Utils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import io.vov.vitamio.MediaPlayer;
 
 public class AudioPlayerActivity extends Activity implements View.OnClickListener {
 
@@ -69,10 +76,14 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
     private void initData() {
 
         utils = new Utils();
-        receiver = new MyReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MusicPlayerService.OPENAUTIO);
-        registerReceiver(receiver, intentFilter);
+//        //注册广播
+//        receiver = new MyReceiver();
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction(MusicPlayerService.OPENAUTIO);
+//        registerReceiver(receiver, intentFilter);
+
+        //EventBus注册
+        EventBus.getDefault().register(this);
 
     }
 
@@ -81,9 +92,15 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            showViewData();
-            checkPlayMode();
+            showData(null);
         }
+    }
+
+    //订阅方法
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = false, priority = 0)
+    public void showData(MediaItem mediaItem) {
+        showViewData();
+        checkPlayMode();
     }
 
     private void showViewData() {
@@ -362,10 +379,14 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
         super.onDestroy();
 
         handler.removeCallbacksAndMessages(null);
-        if(receiver != null){
-            unregisterReceiver(receiver);
-            receiver = null;
-        }
+//        //取消广播
+//        if(receiver != null){
+//            unregisterReceiver(receiver);
+//            receiver = null;
+//        }
+
+        //EventBus取消
+        EventBus.getDefault().unregister(this);
 
         if(con != null){
             unbindService(con);
