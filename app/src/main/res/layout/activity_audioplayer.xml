@@ -118,5 +118,12 @@
 
     </LinearLayout>
 
+    <com.example.iori.mobelplayerfun.view.ShowLyricView
+        android:id="@+id/showLyricView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_bottom"
+        android:layout_below="@+id/rl_top"/>
+
 
    </RelativeLayout>
