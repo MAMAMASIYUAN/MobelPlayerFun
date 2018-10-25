@@ -28,6 +28,7 @@ import com.example.iori.mobelplayerfun.R;
 import com.example.iori.mobelplayerfun.domain.MediaItem;
 import com.example.iori.mobelplayerfun.service.MusicPlayerService;
 import com.example.iori.mobelplayerfun.utils.Utils;
+import com.example.iori.mobelplayerfun.view.ShowLyricView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,6 +39,7 @@ import io.vov.vitamio.MediaPlayer;
 public class AudioPlayerActivity extends Activity implements View.OnClickListener {
 
     private static final int PROGRESS = 1;
+    private static final int SHOW_LYRIC = 2;
     private int position;
     /**
      * 1. True, 来自于状态栏
@@ -56,6 +58,7 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
     private Button btnAudioStartPause;
     private Button btnAudioNext;
     private Button btnLyrc;
+    private ShowLyricView showLyricView;
 
     private IMusicPlayerService service;
     private MyReceiver receiver;
@@ -99,6 +102,7 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
     //订阅方法
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = false, priority = 0)
     public void showData(MediaItem mediaItem) {
+        handler.sendEmptyMessage(SHOW_LYRIC);
         showViewData();
         checkPlayMode();
     }
@@ -122,6 +126,20 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
             super.handleMessage(msg);
 
             switch (msg.what){
+                case SHOW_LYRIC:
+                    try {
+                        //得到当前进度
+                        int currentPosition = service.getCurrentPosition();
+                        //把进度传入ShowLyricView控件并计算那一句高亮
+                        showLyricView.setShowNextLyric(currentPosition);
+                        //实时发送消息
+                        handler.removeMessages(SHOW_LYRIC);
+                        handler.sendEmptyMessage(SHOW_LYRIC);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+
+                    break;
                 case PROGRESS:
                     try {
                         int currentPosition = service.getCurrentPosition();
@@ -220,6 +238,7 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
         btnAudioStartPause = (Button)findViewById( R.id.btn_audio_start_pause );
         btnAudioNext = (Button)findViewById( R.id.btn_audio_next );
         btnLyrc = (Button)findViewById( R.id.btn_lyrc );
+        showLyricView = (ShowLyricView) findViewById(R.id.showLyricView);
 
         btnAudioPlaymode.setOnClickListener( this );
         btnAudioPre.setOnClickListener( this );

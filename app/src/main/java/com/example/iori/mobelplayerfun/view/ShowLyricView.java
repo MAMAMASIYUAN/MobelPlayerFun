@@ -20,6 +20,9 @@ public class ShowLyricView extends TextView {
     private int index;
     private int heightText = 20;
     private Paint whitepaint;
+    private int currentPosition;
+    private long sleepTime;
+    private long timePoint;
 
     public ShowLyricView(Context context) {
         this(context, null);
@@ -103,5 +106,27 @@ public class ShowLyricView extends TextView {
             lyric.setContent(i + "aaaaaaaaaaaaaa" + i);
             lyrics.add(lyric);
         }
+    }
+
+    //根据位置设置高亮歌词
+    public void setShowNextLyric(int currentPosition) {
+
+        this.currentPosition = currentPosition;
+        if(lyrics == null || lyrics.size() == 0){
+            return;
+        }
+
+        for(int i = 1; i < lyrics.size(); i++){
+            if(currentPosition < lyrics.get(i).getTimePoint()){
+                int tempIndex = i - 1;
+                if(currentPosition >= lyrics.get(tempIndex).getTimePoint()){
+                    index = tempIndex;
+                    sleepTime = lyrics.get(index).getSleepTime();
+                    timePoint = lyrics.get(index).getTimePoint();
+                }
+            }
+        }
+        //重新绘制
+        invalidate();
     }
 }
