@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.FileObserver;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -27,12 +28,15 @@ import com.example.iori.mobelplayerfun.IMusicPlayerService;
 import com.example.iori.mobelplayerfun.R;
 import com.example.iori.mobelplayerfun.domain.MediaItem;
 import com.example.iori.mobelplayerfun.service.MusicPlayerService;
+import com.example.iori.mobelplayerfun.utils.LyricUtils;
 import com.example.iori.mobelplayerfun.utils.Utils;
 import com.example.iori.mobelplayerfun.view.ShowLyricView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.File;
 
 import io.vov.vitamio.MediaPlayer;
 
@@ -102,9 +106,41 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
     //订阅方法
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = false, priority = 0)
     public void showData(MediaItem mediaItem) {
-        handler.sendEmptyMessage(SHOW_LYRIC);
+        showLyric();
         showViewData();
         checkPlayMode();
+    }
+
+    private void showLyric() {
+        //解析歌词
+        LyricUtils lyricUtils = new LyricUtils();
+
+        try {
+            //传歌词文件
+//            String path = service.getAudioPath();
+//            path = path.substring(0,path.lastIndexOf("."));
+
+            String artist = service.getArtist();
+            String name = service.getName();
+            int pos1 = name.indexOf("_");
+            int pos2 = name.lastIndexOf(".");
+            String rName = name.substring(pos1 + 1, pos2);
+            String path = "/smartisan/music/lyric";
+            File file = new File(path + "/" + rName + "$$" + artist + ".lrc");
+//            if(!file.exists()){
+//                file = new File(path + ".txt");
+//            }
+            lyricUtils.readLyricFile(file);
+            showLyricView.setLyrics(lyricUtils.getLyrics());
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        if(lyricUtils.isExistsLyric()){
+            handler.sendEmptyMessage(SHOW_LYRIC);
+        }
+
     }
 
     private void showViewData() {

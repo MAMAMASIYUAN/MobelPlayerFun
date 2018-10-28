@@ -341,7 +341,7 @@ public class MusicPlayerService extends Service {
      * @return
      */
     private String getAudioPath(){
-        return "";
+        return mediaItem.getData();
     }
 
     /**

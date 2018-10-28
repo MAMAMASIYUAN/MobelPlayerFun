@@ -1,6 +1,6 @@
 package com.example.iori.mobelplayerfun.view;
 
-class Lyric {
+public class Lyric {
 
     private String content;
     private long timePoint;

@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import com.example.iori.mobelplayerfun.utils.DensityUtil;
+
 import java.util.ArrayList;
 
 @SuppressLint("AppCompatCustomView")
@@ -18,11 +20,12 @@ public class ShowLyricView extends TextView {
     private int width;
     private int height;
     private int index;
-    private int heightText = 20;
+    private int heightText;
     private Paint whitepaint;
     private int currentPosition;
     private long sleepTime;
     private long timePoint;
+
 
     public ShowLyricView(Context context) {
         this(context, null);
@@ -34,7 +37,7 @@ public class ShowLyricView extends TextView {
 
     public ShowLyricView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView();
+        initView(context);
     }
 
     @Override
@@ -83,29 +86,30 @@ public class ShowLyricView extends TextView {
         height = h;
     }
 
-    private void initView() {
+    private void initView(Context context) {
 
 
+        heightText = DensityUtil.dip2px(context, 18);
         paint = new Paint();
         paint.setColor(Color.GREEN);
-        paint.setTextSize(30);
+        paint.setTextSize(DensityUtil.dip2px(context, 18));
         paint.setAntiAlias(true);
         paint.setTextAlign(Paint.Align.CENTER);
 
         whitepaint = new Paint();
         whitepaint.setColor(Color.WHITE);
-        whitepaint.setTextSize(30);
+        whitepaint.setTextSize(DensityUtil.dip2px(context, 18));
         whitepaint.setAntiAlias(true);
         whitepaint.setTextAlign(Paint.Align.CENTER);
 
-        lyrics = new ArrayList<>();
-        for (int i = 0; i < 1000; i++){
-            Lyric lyric = new Lyric();
-            lyric.setTimePoint(1000 * i);
-            lyric.setSleepTime(1500 + i);
-            lyric.setContent(i + "aaaaaaaaaaaaaa" + i);
-            lyrics.add(lyric);
-        }
+//        lyrics = new ArrayList<>();
+//        for (int i = 0; i < 1000; i++){
+//            Lyric lyric = new Lyric();
+//            lyric.setTimePoint(1000 * i);
+//            lyric.setSleepTime(1500 + i);
+//            lyric.setContent(i + "aaaaaaaaaaaaaa" + i);
+//            lyrics.add(lyric);
+//        }
     }
 
     //根据位置设置高亮歌词
@@ -128,5 +132,10 @@ public class ShowLyricView extends TextView {
         }
         //重新绘制
         invalidate();
+    }
+
+    //得到歌词列表
+    public void setLyrics(ArrayList<Lyric> lyrics) {
+        this.lyrics = lyrics;
     }
 }
