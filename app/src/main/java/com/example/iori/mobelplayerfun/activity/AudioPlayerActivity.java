@@ -117,7 +117,7 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
 
         try {
             //传歌词文件
-//            String path = service.getAudioPath();
+            String path1 = service.getAudioPath();
 //            path = path.substring(0,path.lastIndexOf("."));
 
             String artist = service.getArtist();
@@ -126,7 +126,7 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
             int pos2 = name.lastIndexOf(".");
             String rName = name.substring(pos1 + 1, pos2);
             String path = "/smartisan/music/lyric";
-            File file = new File(path + "/" + rName + "$$" + artist + ".lrc");
+            File file = new File(path + "/" + rName + "$$" + artist + ".LRC");
 //            if(!file.exists()){
 //                file = new File(path + ".txt");
 //            }

@@ -45,7 +45,9 @@ public class LyricUtils {
      * @param file /mnt/scard/audio/beijingbeijing.txt
      */
     public void readLyricFile(File file){
-        if(file == null || !file.exists()){
+
+        boolean a = file.exists();
+        if(file == null || !a){
             //歌词文件不存在
             lyrics = null;
             isExistsLyric = false;

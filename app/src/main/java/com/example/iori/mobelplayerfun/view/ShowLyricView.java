@@ -20,11 +20,11 @@ public class ShowLyricView extends TextView {
     private int width;
     private int height;
     private int index;
-    private int heightText;
+    private float heightText;
     private Paint whitepaint;
-    private int currentPosition;
-    private long sleepTime;
-    private long timePoint;
+    private float currentPosition;
+    private float sleepTime;
+    private float timePoint;
 
 
     public ShowLyricView(Context context) {
@@ -45,6 +45,16 @@ public class ShowLyricView extends TextView {
         super.onDraw(canvas);
 
         if(lyrics != null && lyrics.size() > 0){
+
+
+            float plush = 0;
+            if(sleepTime == 0){
+                plush = 0;
+            }else {
+                plush = heightText + ((currentPosition - timePoint) / sleepTime) * heightText;
+            }
+            canvas.translate(0, -plush);
+
             //绘制歌词,current, past, future
             String currentContent = lyrics.get(index).getContent();
             canvas.drawText(currentContent, width/2, height/2,paint);
