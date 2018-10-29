@@ -92,4 +92,6 @@ interface IMusicPlayerService {
            * 得到拖拽位置
            */
            void seekTo(int position);
+
+           int getAudioSessionId();
 }

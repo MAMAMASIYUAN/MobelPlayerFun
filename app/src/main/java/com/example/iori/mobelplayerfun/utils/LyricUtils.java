@@ -42,7 +42,7 @@ public class LyricUtils {
 
     /**
      * 读取歌词文件
-     * @param file /mnt/scard/audio/beijingbeijing.txt
+     * @param file
      */
     public void readLyricFile(File file){
 
@@ -168,7 +168,7 @@ public class LyricUtils {
 
     /**
      * 解析一句歌词
-     * @param line [02:04.12][03:37.32][00:59.73]我在这里欢笑
+     * @param line [02:04.12][03:37.32][00:59.73]我
      * @return
      */
     private String parsedLyric(String line) {
@@ -188,7 +188,7 @@ public class LyricUtils {
             String content = line;
             int i = 1;
             while (pos1 ==0 && pos2 != -1){
-                content = content.substring(pos2 + 1); //[03:37.32][00:59.73]我在这里欢笑--->[00:59.73]我在这里欢笑-->我在这里欢笑
+                content = content.substring(pos2 + 1); //[03:37.32][00:59.73]我在这里--->[00:59.73]我在这-->我在这
                 pos1 = content.indexOf("[");//0/-1
                 pos2 = content.indexOf("]");//9//-1
 
