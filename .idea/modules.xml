@@ -5,9 +5,11 @@
       <module fileurl="file://$PROJECT_DIR$/EventBus/EventBus.iml" filepath="$PROJECT_DIR$/EventBus/EventBus.iml" />
       <module fileurl="file://$PROJECT_DIR$/EventBus3.0_Sample/EventBus3.0_Sample.iml" filepath="$PROJECT_DIR$/EventBus3.0_Sample/EventBus3.0_Sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/MobelPlayerFun.iml" filepath="$PROJECT_DIR$/MobelPlayerFun.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpeechDemo2/SpeechDemo2.iml" filepath="$PROJECT_DIR$/SpeechDemo2/SpeechDemo2.iml" />
       <module fileurl="file://$PROJECT_DIR$/StartAllPlayer/StartAllPlayer.iml" filepath="$PROJECT_DIR$/StartAllPlayer/StartAllPlayer.iml" />
       <module fileurl="file://$PROJECT_DIR$/SurfaceViewDemo/SurfaceViewDemo.iml" filepath="$PROJECT_DIR$/SurfaceViewDemo/SurfaceViewDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/speechDemo/speechDemo.iml" filepath="$PROJECT_DIR$/speechDemo/speechDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/vitamio/vitamio.iml" filepath="$PROJECT_DIR$/vitamio/vitamio.iml" />
       <module fileurl="file://$PROJECT_DIR$/vitamio-sample/vitamio-sample.iml" filepath="$PROJECT_DIR$/vitamio-sample/vitamio-sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/xListView/xListView.iml" filepath="$PROJECT_DIR$/xListView/xListView.iml" />

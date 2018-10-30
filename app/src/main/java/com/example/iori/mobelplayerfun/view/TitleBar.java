@@ -1,6 +1,7 @@
 package com.example.iori.mobelplayerfun.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.iori.mobelplayerfun.R;
+import com.example.iori.mobelplayerfun.activity.SearchActivity;
 
 public class TitleBar extends LinearLayout implements View.OnClickListener {
 
@@ -67,7 +69,8 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tv_search:
-                Toast.makeText(context, "Search", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, SearchActivity.class);
+                context.startActivity(intent);
                 break;
             case R.id.rl_game:
                 Toast.makeText(context, "Game", Toast.LENGTH_SHORT).show();

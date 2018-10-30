@@ -70,7 +70,7 @@
                 <data android:mimeType="application/sdp" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="SearchActivityandroid.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http" />
@@ -103,6 +103,8 @@
                 <action android:name="com.atma.mobileplayer_OPENAUDIO"/>
             </intent-filter>
         </service>
+
+        <activity android:name=".activity.SearchActivity"/>
 
     </application>
 

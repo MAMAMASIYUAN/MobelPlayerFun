@@ -1,12 +1,15 @@
 package com.example.iori.mobelplayerfun.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.iori.mobelplayerfun.R;
 import com.example.iori.mobelplayerfun.base.BasePager;
@@ -103,4 +106,24 @@ public  class MainActivity extends FragmentActivity{
         return basePager;
     }
 
+//    private boolean isExit = false;
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if(keyCode == KeyEvent.KEYCODE_BACK){
+//            if(position != 0){
+//                position = 0;
+//                rg_bottom_tag.check(R.id.rb_video);
+//            }else if(!isExit){
+//                isExit = true;
+//                Toast.makeText(MainActivity.this, "再按一次", Toast.LENGTH_SHORT).show();
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        isExit = true;
+//                    }
+//                }, 2000);
+//            }
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 }

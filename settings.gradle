@@ -1,1 +1,1 @@
-include ':app', ':StartAllPlayer', ':vitamio-sample', ':vitamio', ':xutils', ':xUtils3_sample', ':xListView', ':SurfaceViewDemo', ':EventBus3.0_Sample', ':EventBus'
+include ':app', ':StartAllPlayer', ':vitamio-sample', ':vitamio', ':xutils', ':xUtils3_sample', ':xListView', ':SurfaceViewDemo', ':EventBus3.0_Sample', ':EventBus', ':speechDemo', ':SpeechDemo2'
