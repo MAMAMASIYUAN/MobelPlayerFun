@@ -10,4 +10,9 @@ public class Constants {
      * Address of net video
      */
     public static final String NET_URL = "http://api.m.mtime.cn/PageSubArea/TrailerList.api";
+
+    /**
+     * 搜索的路径
+     */
+    public static  final  String SEARCH_URL = "https://www.sogou.com/sogou?query=";
 }

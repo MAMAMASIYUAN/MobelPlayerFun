@@ -30,4 +30,7 @@ dependencies {
     implementation files('libs/picasso-2.5.2.jar')
     implementation files('libs/glide-3.7.0.jar')
     implementation project(':EventBus')
+    implementation files('libs/Msc.jar')
+    implementation files('libs/Sunflower.jar')
+    implementation files('libs/gson-2.2.1.jar')
 }
