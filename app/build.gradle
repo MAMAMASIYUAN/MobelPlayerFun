@@ -33,4 +33,5 @@ dependencies {
     implementation files('libs/Msc.jar')
     implementation files('libs/Sunflower.jar')
     implementation files('libs/gson-2.2.1.jar')
+    implementation files('libs/showapi_sdk.jar')
 }

@@ -24,19 +24,13 @@ import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
-import com.iflytek.cloud.SpeechSynthesizer;
-import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
+import com.show.api.ShowApiRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -53,8 +47,9 @@ public class SearchActivity extends Activity {
     private ProgressBar progressBar;
     private TextView tvNodata;
     private String url;
-    private List<SearchBean.ItemData> items;
+    private List<SearchBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean> items;
     private SearchAdapter adapter;
+    private String res;
 
     /**
      * Find the Views in the layout<br />
@@ -99,51 +94,72 @@ public class SearchActivity extends Activity {
             if(items != null && items.size() >0){
                 items.clear();
             }
-            try {
-                text = URLEncoder.encode(text, "UTF-8");
-                url = Constants.SEARCH_URL + text;
-                getDataFromNet();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+
+            url = text;
+            getDataFromNet();
         }
     }
 
     private void getDataFromNet() {
 
         progressBar.setVisibility(View.VISIBLE);
-        RequestParams parms = new RequestParams(url);
-        x.http().get(parms, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
+        new Thread(){
+            //在新线程中发送网络请求
+            public void run() {
+                String appid="79216";//要替换成自己的
+                String secret="0b4e4cf157464dc3bd802f17f72b2f2f";//要替换成自己的
+                 res = new ShowApiRequest(Constants.SEARCH_URL, appid, secret)
+                        .addTextPara("channelId", "")
+                        .addTextPara("channelName", "")
+                        .addTextPara("title", url)
+                        .addTextPara("page", "1")
+                        .addTextPara("needContent", "0")
+                        .addTextPara("needHtml", "0")
+                        .addTextPara("needAllList", "0")
+                        .addTextPara("maxResult", "20")
+                        .addTextPara("id", "")
+                        .post();
+                System.out.println(res);
 
-                processData(result);
             }
+        }.start();
 
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
+        progressBar.setVisibility(View.GONE);
+        if(res != null){
+            processData(res);
+        }
 
-                progressBar.setVisibility(View.GONE);
-            }
 
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-                progressBar.setVisibility(View.GONE);
-            }
-        });
+//        RequestParams parms = new RequestParams(url);
+//        x.http().get(parms, new Callback.CommonCallback<String>() {
+//            @Override
+//            public void onSuccess(String result) {
+//
+//                processData(result);
+//            }
+//
+//            @Override
+//            public void onError(Throwable ex, boolean isOnCallback) {
+//
+//                progressBar.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onCancelled(CancelledException cex) {
+//
+//            }
+//
+//            @Override
+//            public void onFinished() {
+//
+//                progressBar.setVisibility(View.GONE);
+//            }
+//        });
     }
 
-    private void processData(String result) {
-        SearchBean searchBean = parsedJson(result);
-        items = searchBean.getItems();
-
-
+    private void processData(String res) {
+        SearchBean searchBean = parsedJson(res);
+        items = searchBean.getShowapi_res_body().getPagebean().getContentlist();
         showData();
     }
 

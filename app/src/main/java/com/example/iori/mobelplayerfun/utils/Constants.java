@@ -14,5 +14,5 @@ public class Constants {
     /**
      * 搜索的路径
      */
-    public static  final  String SEARCH_URL = "https://www.sogou.com/sogou?query=";
+    public static  final  String SEARCH_URL = "http://route.showapi.com/109-35";
 }
