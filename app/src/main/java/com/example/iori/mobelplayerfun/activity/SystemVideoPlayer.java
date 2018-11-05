@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
@@ -22,6 +23,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -488,6 +490,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
     private float startY;
     private float endY;
+    private float startX;
+    private float endX;
     private float touchRang;// Height of the screen
     private int mVol;//Voice when pressing
 
@@ -497,26 +501,73 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 startY = event.getY();
+                startX = event.getX();
                 mVol = am.getStreamVolume(AudioManager.STREAM_MUSIC);
                 touchRang = Math.max(screenHeight, screenWidth);
                 handler.removeMessages(HIDE_MEDIACONTROLLER);
                 break;
             case MotionEvent.ACTION_MOVE:
                 endY = event.getY();
+                endX = event.getX();
                 float distanceY = startY - endY;
                 float delta = (distanceY / touchRang) * maxVoice;
 
-                int voice = (int) Math.min(Math.max(mVol + delta,0),maxVoice);
-                if(delta != 0){
-                    isMute = false;
-                    updateVoice(voice, isMute);
+                if(endX < screenWidth / 2){
+                    //左侧，调节亮度
+                    final double FLING_MIN_DISTANCE = 0.5;
+                    final double FLING_MIN_VELOCITY = 0.5;
+                    if (distanceY > FLING_MIN_DISTANCE
+                            && Math.abs(distanceY) > FLING_MIN_VELOCITY) {
+                        setBrightness(20);
+                    }
+                    if(distanceY < FLING_MIN_DISTANCE && Math.abs(distanceY) > FLING_MIN_VELOCITY){
+
+                        setBrightness(-20);
+                    }
+
+                }else {
+                    //右侧，调节声音
+                    int voice = (int) Math.min(Math.max(mVol + delta,0),maxVoice);
+                    if(delta != 0){
+                        isMute = false;
+                        updateVoice(voice, isMute);
+                    }
                 }
+
+
                 break;
             case MotionEvent.ACTION_UP:
                 handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 50000);
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    private Vibrator vibrator;
+    /*
+     *
+     * 设置屏幕亮度 lp = 0 全暗 ，lp= -1,根据系统设置， lp = 1; 最亮
+     */
+    private void setBrightness(float brightness) {
+
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        // if (lp.screenBrightness <= 0.1) {
+        // return;
+        // }
+        lp.screenBrightness = lp.screenBrightness + brightness / 255.0f;
+        if (lp.screenBrightness > 1) {
+            lp.screenBrightness = 1;
+            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            long[] pattern = { 10, 200 }; // OFF/ON/OFF/ON...
+            vibrator.vibrate(pattern, -1);
+        } else if (lp.screenBrightness < 0.2) {
+            lp.screenBrightness = (float) 0.2;
+            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            long[] pattern = { 10, 200 }; // OFF/ON/OFF/ON...
+            vibrator.vibrate(pattern, -1);
+        }
+//        Log.e(TAG, "lp.screenBrightness= " + lp.screenBrightness);
+        getWindow().setAttributes(lp);
     }
 
     private void initData() {

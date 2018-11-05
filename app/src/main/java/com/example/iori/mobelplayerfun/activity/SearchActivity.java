@@ -130,6 +130,7 @@ public class SearchActivity extends Activity {
         }
 
 
+        // Use RequestParams to get data from net
 //        RequestParams parms = new RequestParams(url);
 //        x.http().get(parms, new Callback.CommonCallback<String>() {
 //            @Override
