@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.iori.mobelplayerfun.R;
+import com.example.iori.mobelplayerfun.activity.AIActivity;
 import com.example.iori.mobelplayerfun.activity.SearchActivity;
 
 public class TitleBar extends LinearLayout implements View.OnClickListener {
@@ -73,7 +74,9 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
                 context.startActivity(intent);
                 break;
             case R.id.rl_game:
-                Toast.makeText(context, "Game", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Game", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(context, AIActivity.class);
+                context.startActivity(intent1);
                 break;
             case R.id.iv_record:
                 Toast.makeText(context, "Record", Toast.LENGTH_SHORT).show();

@@ -106,6 +106,7 @@ public  class MainActivity extends FragmentActivity{
         return basePager;
     }
 
+    //按两次返回方可推出程序
 //    private boolean isExit = false;
 //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
