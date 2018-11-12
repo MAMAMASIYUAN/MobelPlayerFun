@@ -34,12 +34,11 @@ import com.example.iori.mobelplayerfun.utils.Utils;
 import com.example.iori.mobelplayerfun.view.BaseVisualizerView;
 import com.example.iori.mobelplayerfun.view.ShowLyricView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+
 
 import java.io.File;
 
+import de.greenrobot.event.EventBus;
 import io.vov.vitamio.MediaPlayer;
 
 public class AudioPlayerActivity extends Activity implements View.OnClickListener {
@@ -107,8 +106,15 @@ public class AudioPlayerActivity extends Activity implements View.OnClickListene
     }
 
     //订阅方法
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = false, priority = 0)
+//    @Subscribe(threadMode = ThreadMode.MAIN, sticky = false, priority = 0)
     public void showData(MediaItem mediaItem) {
+        showLyric();
+        showViewData();
+        checkPlayMode();
+        setupVisualizerFxAndUi();
+    }
+
+    public void onEventMainThread(MediaItem mediaItem){
         showLyric();
         showViewData();
         checkPlayMode();

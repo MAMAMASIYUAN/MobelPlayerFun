@@ -23,10 +23,13 @@ import com.example.iori.mobelplayerfun.activity.AudioPlayerActivity;
 import com.example.iori.mobelplayerfun.domain.MediaItem;
 import com.example.iori.mobelplayerfun.utils.CacheUtils;
 
-import org.greenrobot.eventbus.EventBus;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
+
 public class MusicPlayerService extends Service {
 
     public static final String OPENAUTIO = "com.atm.mediaplayer.OPENAUTIO";

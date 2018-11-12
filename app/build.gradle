@@ -29,9 +29,22 @@ dependencies {
     implementation project(':xutils')
     implementation files('libs/picasso-2.5.2.jar')
     implementation files('libs/glide-3.7.0.jar')
-    implementation project(':EventBus')
     implementation files('libs/Msc.jar')
     implementation files('libs/Sunflower.jar')
     implementation files('libs/gson-2.2.1.jar')
     implementation files('libs/showapi_sdk.jar')
+//    implementation project(path: ':EventBus')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+//    implementation project(path: ':EventBus')
+    implementation 'de.greenrobot:eventbus:2.4.0'
+    implementation project(path: ':jcvideoplayer-lib')
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+//    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+//    implementation project(path: ':jcvideoplayer-lib')
+    //    implementation project(path: ':EventBus')
+    //    implementation files('libs/classes.jar')
+    //    implementation project(path: ':EventBus')
+    //    implementation files('libs/imageloader.jar')
+    //    implementation files('libs/universal-image-loader-1.9.3.jar')
+    //    implementation files('libs/universal-image-loader-1.9.5.jar')
 }
